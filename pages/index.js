@@ -1,7 +1,8 @@
-import Head from 'next/head';
-import styled from 'styled-components';
-import { useState } from 'react';
-import Property from '../components/Property';
+import Head from "next/head";
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import Property from "../components/Property";
+import useY from "../hooks/use-y";
 
 const Wrapper = styled.div`
   display: grid;
@@ -54,7 +55,7 @@ const Footer = styled.footer`
   padding: 0.5rem 0;
 `;
 
-const TextArea = styled.textarea.attrs({ id: 'textArea', spellCheck: false })`
+const TextArea = styled.textarea.attrs({ id: "textArea", spellCheck: false })`
   resize: none;
   outline: none;
   border: none;
@@ -80,16 +81,36 @@ const PropertyWrapper = styled.div`
   padding: 1rem;
 `;
 
-const initialObject = { name: 'Gordon Freeman' };
+const initialObject = { name: "Gordon Freeman" };
 
 export default function Home() {
   const [val, setVal] = useState(JSON.stringify(initialObject, null, 2));
   const [json, setJson] = useState(initialObject);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
+
+  const getID = () => {
+    if (typeof window !== "undefined") {
+      return window.location.search.split("id=")[1];
+    }
+    return null;
+  };
+
+  const [state, setState] = useY({
+    room: getID(),
+    event: "state",
+  });
+
+  useEffect(() => {
+    if (state) {
+      setVal(state);
+    }
+  }, [state]);
+
+  console.log(state);
 
   const change = (val) => {
-    console.log('change');
     setVal(val);
+    setState(val);
     try {
       setJson(JSON.parse(val));
     } catch (e) {
@@ -102,6 +123,7 @@ export default function Home() {
       console.log(typeof json);
       const parsed = JSON.parse(val);
       setVal(JSON.stringify(parsed, null, 2));
+      setState(val);
     } catch (e) {
       console.log(e);
     }
@@ -114,7 +136,10 @@ export default function Home() {
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
         <title>JSON Fiddle - parse, format & inspect json</title>
-        <meta name="description" content="Parse, format, filter & inspect json with this online editor" />
+        <meta
+          name="description"
+          content="Parse, format, filter & inspect json with this online editor"
+        />
         <meta
           name="keywords"
           content="JSON, json, online, editor, filter, inspect, fiddle, parse, parser, pretty, print, pretty print, format, formatter, object, key, val, value, byte"
@@ -141,19 +166,75 @@ export default function Home() {
         />
         <meta property="og:site_name" content="JSON Fiddle" />
 
-        <link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/favicons/apple-icon-76x76.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/favicons/apple-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/favicons/apple-icon-120x120.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-icon-144x144.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="57x57"
+          href="/favicons/apple-icon-57x57.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="60x60"
+          href="/favicons/apple-icon-60x60.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="72x72"
+          href="/favicons/apple-icon-72x72.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="76x76"
+          href="/favicons/apple-icon-76x76.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="114x114"
+          href="/favicons/apple-icon-114x114.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="120x120"
+          href="/favicons/apple-icon-120x120.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="144x144"
+          href="/favicons/apple-icon-144x144.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="152x152"
+          href="/favicons/apple-icon-152x152.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/favicons/apple-icon-180x180.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/favicons/android-icon-192x192.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicons/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="96x96"
+          href="/favicons/favicon-96x96.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicons/favicon-16x16.png"
+        />
         <link rel="manifest" href="/favicons/manifest.json" />
       </Head>
       <Header>
